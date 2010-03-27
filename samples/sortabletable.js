@@ -1,6 +1,6 @@
 /* 
  * JSINQ, JavaScript integrated query
- * Copyright (c) 2009 Kai Jäger. Some rights reserved.
+ * Copyright (c) 2010 Kai Jäger. Some rights reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the license.txt file. 
@@ -33,10 +33,9 @@
 		
 		// Take the rows which are not sorted and put the back into the table
 		// body.
-		var enumerator = result.getEnumerator();
-		while (enumerator.moveNext()) {
-			tableBody.appendChild(enumerator.current());
-		}		
+		result.each(function(element) {
+			tableBody.appendChild(element);
+		});	
 	}
 	
 	// Create onclick handlers for all the table headers. This is boilerplate

@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------
-JSINQ - LINQ to Objects for JavaScript, Version 0.9 beta
+﻿-------------------------------------------------------------------------------
+JSINQ - LINQ to Objects for JavaScript, Version 1.0
 http://www.codeplex.com/jsinq
 
-Copyright (c) 2009 Kai Jäger. Some rights reserved.
+Copyright (c) 2010 Kai Jäger. Some rights reserved.
 
 Use of the JSINQ source code is governed by an MIT-style license that can be 
 found in the license.txt file.

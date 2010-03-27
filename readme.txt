@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------
-JSINQ - LINQ to Objects for JavaScript, Version 0.9 beta
+﻿-------------------------------------------------------------------------------
+JSINQ - LINQ to Objects for JavaScript, Version 1.0
 http://www.codeplex.com/jsinq
 
-Copyright (c) 2009 Kai Jäger. Some rights reserved.
+Copyright (c) 2010 Kai Jäger. Some rights reserved.
 
 Use of the JSINQ source code is governed by an MIT-style license that can be 
 found in the license.txt file.
@@ -17,16 +17,38 @@ collections, relational databases, XML documents and many other data sources.
 LINQ to Objects, the part of LINQ that JSINQ implements in JavaScript, deals 
 with querying in-memory data structures such as arrays, lists, etc.
 
+Release Notes for Version 1.0
+
+* jsinq-enumerable.js renamed to jsinq.js as it now also hosts the new types
+  jsinq.Dictionary and jsinq.List (see next two bullet points)
+  
+* New type jsinq.Dictionary, a faithful JavaScript implementation of 
+  System.Collections.Generic.Dictionary. Supports both primitive and complex
+  keys (complex keys are supported with limited efficiency)
+
+* New type jsinq.List, a faithful JavaScript implementation of 
+  System.Collections.Generic.List.
+
+* New test suite for jsinq.Dictionary  
+
+* New test suite for jsinq.List
+  
+* jsinq.Enumerable modified to use jsinq.Dictionary instead of specialized hash
+  type that was used in previous versions.
+  
+* New .NET 4.0 query operator "zip" added to jsinq.Enumerable
+
+* New method "each" for jsinq.Enumerable that simplifies enumeration
 
 How to use JSINQ
 
-* Copy the files jsinq-enumerable.js and jsinq-query.js from the build folder
+* Copy the files jsinq.js and jsinq-query.js from the build folder
   to a location in your project folder.
   
 * Embed the JavaScript files into your HTML page using the following code
 
-  <script type="text/javascript" src="jsinq-enumerable-js"></script>
-  <script type="text/javascript" src="jsinq-query-js"></script>
+  <script type="text/javascript" src="jsinq.js"></script>
+  <script type="text/javascript" src="jsinq-query.js"></script>
 
 * Use JSINQ like this:
 
@@ -34,10 +56,9 @@ How to use JSINQ
   var query = new jsinq.Query('from d in $0 select d');
   query.setValue(0, new jsinq.Enumerable(data));
   var result = query.execute();
-  var enumerator = result.getEnumerator();
-  while (enumerator.moveNext()) {
-    document.write(enumerator.current());
-  }
+  result.each(function(element) {
+    document.write(element);
+  });
   
 * Look at the examples in the samples folder and read the reference at
   http://www.codeplex.com/jsinq

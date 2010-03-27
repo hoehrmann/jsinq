@@ -1,6 +1,6 @@
 /* 
  * JSINQ, JavaScript integrated query
- * Copyright (c) 2009 Kai Jäger. Some rights reserved.
+ * Copyright (c) 2010 Kai Jäger. Some rights reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the license.txt file. 

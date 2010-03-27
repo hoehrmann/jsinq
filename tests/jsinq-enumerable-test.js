@@ -1,6 +1,6 @@
 /* 
  * JSINQ, JavaScript integrated query
- * Copyright (c) 2009 Kai Jäger. Some rights reserved.
+ * Copyright (c) 2010 Kai Jäger. Some rights reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the license.txt file. 
@@ -39,38 +39,6 @@ var TEST_PREDICATE_PASS_ARRAY = [101, 299, 877, 999, 101, 305, 593, 888];
 var TEST_PREDICATE_FAIL_ARRAY = [17, 44, 9, 17, 93, 8, 11, 7, 4];
 var TEST_PREDICATE_PASS_SINGLETON_ARRAY = [133];
 var TEST_PREDICATE_FAIL_SINGLETON_ARRAY = [15];
-
-// Basic test that any Enumerable should pass
-function genericTestEnumerable(enumerable, checkContents) {
-	if (arguments.length < 2) {
-		checkContents = true;
-	}
-	this.assert(enumerable instanceof jsinq.Enumerable);
-	var enumerator = enumerable.getEnumerator();
-	var elements = [];
-	while (enumerator.moveNext()) {
-		var current;
-		this.assertNothingRaised(function() { 
-			current = enumerator.current(); 
-		});
-		elements.push(current);
-	}
-	this.assertRaise(jsinq.InvalidOperationException.prototype.name,
-		function() { enumerator.current(); });	
-	enumerator.reset();
-	var count = 0;
-	while (enumerator.moveNext()) {
-		current;
-		this.assertNothingRaised(function() { 
-			current = enumerator.current(); 
-		});
-		if (checkContents) {
-			this.assertEqual(current, elements[count]);
-		}
-		++count;
-	}
-	this.assertEqual(elements.length, count);	
-}
 
 new Test.Unit.Runner({
 	// jsinq.EqualityComparer
@@ -1490,6 +1458,66 @@ new Test.Unit.Runner({
 			this.assertEqual(TEST_ARRAY[i], array[i]);
 		}
 	},
+		
+	// jsinq.Enumerable.toDictionary
+	testToDictionary: function() {
+		var enumerable = new jsinq.Enumerable();
+		var dictionary = enumerable.toDictionary(function(element) {
+			return element;
+		});
+		this.assertEqual(true, dictionary instanceof jsinq.Dictionary);
+		this.assertEqual(0, dictionary.count());
+		
+		enumerable = new jsinq.Enumerable(TEST_ARRAY);
+		var index = 0;
+		var dictionary = enumerable.select(function(element) {
+			return [index++, element];
+		}).toDictionary(function(element) {
+			return element[0];
+		});
+		
+		for (var i = 0; i < TEST_ARRAY.length; i++) {
+			this.assertEqual(TEST_ARRAY[i], dictionary.item(i)[1]);
+		}
+	},
+		
+	// jsinq.Enumerable.toLookup
+	testToLookup: function() {
+		var enumerable = new jsinq.Enumerable();
+		var lookup = enumerable.toLookup(function(element) {
+			return element;
+		});
+		this.assertEqual(true, lookup instanceof jsinq.Lookup);
+		this.assertEqual(0, lookup.count());
+		
+		enumerable = jsinq.Enumerable.range(0, 10);
+		lookup = enumerable.toLookup(function(element) {
+			return element % 2;
+		});
+		
+		var _this = this;
+		lookup.each(function(element) {
+			_this.assertEqual(true, element instanceof jsinq.Grouping);
+			element.each(function(value) {
+				_this.assertEqual(element.key, value % 2);
+			});
+		});
+	},
+		
+	// jsinq.Enumerable.toList
+	testToList: function() {
+		var enumerable = new jsinq.Enumerable();
+		var list = enumerable.toList();
+		this.assertEqual(true, list instanceof jsinq.List);
+		this.assertEqual(0, list.count());		
+		
+		enumerable = new jsinq.Enumerable(TEST_ARRAY);
+		list = enumerable.toList();
+		
+		for (var i = 0; i < list.count(); i++) {
+			this.assertEqual(TEST_ARRAY[i], list.item(i));
+		}
+	},
 	
 	// jsinq.Enumerable.union
 	testUnion: function() {
@@ -1552,5 +1580,54 @@ new Test.Unit.Runner({
 			index += 2;
 		}
 		genericTestEnumerable.call(this, filtered);
+	},
+		
+	// jsinq.Enumerable.zip
+	testZip: function() {
+		var resultSelector = function(first, second) {
+			return first + second;
+		};
+		
+		var first = new jsinq.Enumerable();
+		var second = new jsinq.Enumerable();
+		var result = first.zip(second, resultSelector);
+		this.assertEqual(0, result.count());
+		genericTestEnumerable.call(this, result);
+		
+		first = new jsinq.Enumerable(TEST_ARRAY);
+		second = new jsinq.Enumerable(TEST_ARRAY_DISJOINT);
+		result = first.zip(second, resultSelector);
+		this.assertEqual(Math.min(first.count(), second.count()), 
+			result.count());
+		genericTestEnumerable.call(this, result);
+		
+		var enumerator = result.getEnumerator();
+		var index = 0;
+		while (enumerator.moveNext()) {
+			this.assertEqual(TEST_ARRAY[index] + TEST_ARRAY_DISJOINT[index], 
+				enumerator.current());
+			++index;
+		}
+	},
+		
+	// jsinq.Enumerable.each
+	testEach: function() {
+		var calls = 0;
+		var enumerable = new jsinq.Enumerable();
+		enumerable.each(function(e) {
+			++calls;
+		});
+		this.assertEqual(0, calls);
+		
+		calls = 0;
+		
+		var _this = this;
+		
+		enumerable = new jsinq.Enumerable(TEST_ARRAY);
+		enumerable.each(function(e) {
+			_this.assertEqual(TEST_ARRAY[calls], e);
+			++calls;
+		});
+		this.assertEqual(TEST_ARRAY.length, calls);
 	}
  });

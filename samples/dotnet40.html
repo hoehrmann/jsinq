@@ -15,39 +15,30 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-	<h1>Basic JSINQ example</h1>
+	<h1>JSINQ .NET 4.0 examples</h1>
 	<p>
 		The source code for this example can be found in the file 
-		<em>basic.js</em>.
+		<em>dotnet40.js</em>.
 	</p>
 	<p>
-		This example showcases the use of <tt>jsinq.Enumerable</tt> without 
-		the use of the JSINQ query compiler. Queries are defined by
-		chaining together method calls on an instance of 
-		<tt>jsinq.Enumerable</tt>. In this concrete example, an HTML table is
-		filled from a JSON structure using a simple query statement. The query
-		itself generates the HTML nodes that make up the rows of the results
-		table.
+		This example showcases the new zip-operator that was introduced with
+		.NET 4.0.
 	</p>
 	
-	<h2>Results</h2>
-	<table border="1">
-		<thead>
-			<tr>
-				<td>id</td>
-				<td>firstname</td>
-				<td>lastname</td>
-				<td>gender</td>
-			</tr>
-		</thead>
-		<tbody id="results"></tbody>
-	</table>
+	<h2>Source 1</h2>
+	<div id="source1" style="border: 1px solid black"></div>
+	
+	<h2>Source 2</h2>
+	<div id="source2" style="border: 1px solid black"></div>	
+	
+	<h2>Result</h2>
+	<div id="result" style="border: 1px solid black"></div>		
 	
 	<!-- Please note that this example uses the un-minified version of the
 	jsinq library for debugging purposes. It is recommended that you use the
 	minified version found in the build folder for production use. -->
 	<script type="text/javascript" src="../source/jsinq.js">
 	</script>	
-	<script type="text/javascript" src="basic.js"></script>
+	<script type="text/javascript" src="dotnet40.js"></script>
 </body>
 </html>
