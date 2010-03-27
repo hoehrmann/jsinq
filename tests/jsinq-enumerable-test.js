@@ -180,11 +180,8 @@ new Test.Unit.Runner({
 		
 		this.assertRaise(jsinq.InvalidOperationException.prototype.name, 
 			function() { enumerable.aggregate(aggregateFunction) });
-		this.assertRaise(jsinq.InvalidOperationException.prototype.name, 
-			function() { 
-				enumerable.aggregate(TEST_SCALAR, aggregateFunction) 
-			}
-		);
+		this.assertEqual(TEST_SCALAR, enumerable.aggregate(
+			TEST_SCALAR, aggregateFunction));
 		
 		enumerable = new jsinq.Enumerable(TEST_ARRAY);
 		var sum = 0;
@@ -210,6 +207,22 @@ new Test.Unit.Runner({
 			calculatedAverage);
 	},
 	
+	// See item # 2936, reported by xanatos
+	testAggregate_2936: function() {
+		var aggregateFunction = function(a, b) { return a; };
+		var resultSelector = function(a) { return a; };
+		
+		this.assertNothingRaised(function() {
+			var enumerable = new jsinq.Enumerable();
+			enumerable.aggregate(123, aggregateFunction);
+		});
+		
+		this.assertNothingRaised(function() {
+			var enumerable = new jsinq.Enumerable();
+			enumerable.aggregate(123, aggregateFunction, resultSelector);
+		});
+	},
+		
 	// jsinq.Enumerable.all
 	testAll: function() {
 		var empty = new jsinq.Enumerable();

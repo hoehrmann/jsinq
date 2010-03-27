@@ -547,10 +547,6 @@
 			aggregate: function() {
 				var enumerator = this.getEnumerator();
 				
-				if (!enumerator.moveNext()) {
-					throw new InvalidOperationException();
-				}						
-				
 				var running;
 				var func;
 				var resultSelector = identity;
@@ -560,11 +556,15 @@
 					if (arguments.length >= 3) {
 						resultSelector = arguments[2];
 					}
-					enumerator.reset();
 				} else {
+					if (!enumerator.moveNext()) {
+						throw new InvalidOperationException();
+					}						
+
 					func = arguments[0];		
 					running = enumerator.current();
 				}
+							
 				while (enumerator.moveNext()) {
 					running = func(running, enumerator.current());
 				} 
@@ -620,8 +620,9 @@
 				if (arguments.length == 0) {
 					selector = identity;
 				}
-				var count = 0;
-				var sum = this.aggregate(0, function(running, current) {
+				
+				var count = 1;
+				var sum = this.aggregate(function(running, current) {
 					++count;	
 					return running + selector(current);
 				});
@@ -1470,7 +1471,7 @@
 				if (arguments.length == 0) {
 					selector = identity;
 				}
-				return this.aggregate(0, function(running, current) {
+				return this.aggregate(function(running, current) {
 					return running + selector(current);
 				});
 			},		
@@ -2058,7 +2059,7 @@
 		};
 		
 		/**
-		 * Indicates whether this list is read-only
+		 * Indicates whether this dictionary is read-only
 		 */
 		this.isReadOnly = function() {
 			return false;
@@ -2484,7 +2485,7 @@
 		};
 		
 		/**
-		 * Returns the index of the first occurrence of the specified item
+		 * Returns the index of the last occurrence of the specified item
 		 * in the list or a part thereof
 		 *
 		 * Overloads:
