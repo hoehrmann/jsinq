@@ -2032,14 +2032,14 @@
 		 */		
 		this.remove = function(key) {
 			if (isPrimitive(key) && 
-				typeof(primitiveItems[key]) != 'undefined') {
+				primitiveItems[key] instanceof Array) {
 				delete primitiveItems[key];
 				--count;
 				return true;
 			} else {
 				var keyHash = hashComplexKey(key);
 				var candidates = complexItems[keyHash];
-				if (typeof candidates != 'undefined') {
+				if (candidates instanceof Array) {
 					for (var i = 0; i < candidates.length; i++) {
 						if ((comparer != null && 
 							comparer.equals(candidates[i].key, key)) ||
