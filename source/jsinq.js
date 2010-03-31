@@ -1823,7 +1823,7 @@
 		
 		function isPrimitive(obj) {
 			return typeof obj == 'string' || typeof obj == 'number' || 
-				typeof key == 'boolean' || typeof obj == 'null';
+				typeof key == 'boolean' || obj === null;
 		}
 		
 		function lookUp(key, func) {
@@ -1831,8 +1831,8 @@
 			
 			if (comparer == null && isPrimitive(key)) {
 				var value = primitiveItems[key];
-				if (typeof value != 'undefined') {
-					funcResult = func(value);							
+				if (value instanceof Array) {
+					funcResult = func(value[0]);							
 				} else {
 					funcResult = func();
 				}						
@@ -1840,13 +1840,13 @@
 					if (typeof value == 'undefined') {
 						++count;
 					}
-					primitiveItems[key] = funcResult[1];
+					primitiveItems[key] = [funcResult[1]];
 				}						
 				return funcResult[0];
 			} else {
 				var keyHash = hashComplexKey(key);				
 				var candidates = complexItems[keyHash];				
-				if (typeof candidates != 'undefined') {
+				if (candidates instanceof Array) {
 					var candidate;
 					var candidatesLength = candidates.length;
 					for (var i = 0; i < candidatesLength; i++) {
@@ -1865,7 +1865,7 @@
 				funcResult = func();
 				if (funcResult.length > 1) {
 					var newKeyValuePair = {key: key, value: funcResult[1]};
-					if (typeof candidates != 'undefined') {
+					if (candidates  instanceof Array) {
 						candidates.push(newKeyValuePair);
 					} else {
 						complexItems[keyHash] = [newKeyValuePair];
@@ -2012,7 +2012,7 @@
 		this.toArray = function() {
 			var result = [];
 			for (var key in primitiveItems) {
-				result.push({key: key, value: primitiveItems[key]});
+				result.push({key: key, value: primitiveItems[key][0]});
 			}
 			var elements;
 			var i;
