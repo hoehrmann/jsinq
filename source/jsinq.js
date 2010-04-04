@@ -1471,7 +1471,7 @@
 				if (arguments.length == 0) {
 					selector = identity;
 				}
-				return this.aggregate(function(running, current) {
+				return this.aggregate(0, function(running, current) {
 					return running + selector(current);
 				});
 			},		

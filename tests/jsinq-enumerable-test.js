@@ -1244,11 +1244,12 @@ new Test.Unit.Runner({
 	testSum: function() {
 		var enumerable = new jsinq.Enumerable();
 		
-		this.assertRaise(jsinq.InvalidOperationException.prototype.name, 
-			function() { enumerable.sum() });
-		this.assertRaise(jsinq.InvalidOperationException.prototype.name, 
+		this.assertNothingRaised(function() { enumerable.sum() });
+		this.assertNothingRaised(
 			function() { enumerable.sum(function (item) { return item; }) });
 			
+		this.assertEqual(0, enumerable.sum());
+		
 		var sum = 0;
 		for (var i = 0; i < TEST_ARRAY.length; i++) {			
 			sum += TEST_ARRAY[i];
