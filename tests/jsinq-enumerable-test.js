@@ -54,6 +54,13 @@ new Test.Unit.Runner({
 		testComparer(jsinq.EqualityComparer.getDefault());
 	},
 	
+	// See item # 2936, reported by ndaz5
+	testEqualityComparer_5326: function() {
+		var equals = function(a, b) { return a == b; };
+		var comparer = jsinq.EqualityComparer.fromFunction(equals);
+		this.assert(comparer.equals == equals);
+	},
+	
 	// jsinq.Comparer
 	testComparer: function() {
 		var _this = this;

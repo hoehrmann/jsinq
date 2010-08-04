@@ -104,7 +104,7 @@
 		 */
 		EqualityComparer.fromFunction = function(func) {
 			var comparer = new EqualityComparer();
-			comparer.compare = func;
+			comparer.equals = func;
 			return comparer;
 		};
 	})();		
